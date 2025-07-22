@@ -8,12 +8,22 @@ function ToDoList() {
     setNewTask(event.target.value);
   }
   function addTask(event) {
-    setTasks([...tasks, newTask]);
+    if (newTask.trim() === "") return;
+    const taskObject = {
+      text: newTask,
+      completed: false,
+    };
+    setTasks([...tasks, taskObject]);
     setNewTask("");
   }
   function removeTask(index) {
     const updatedTasks = [...tasks];
     updatedTasks.splice(index, 1);
+    setTasks(updatedTasks);
+  }
+  function completeTask(index) {
+    const updatedTasks = [...tasks];
+    updatedTasks[index].completed = !updatedTasks[index].completed;
     setTasks(updatedTasks);
   }
   return (
@@ -37,7 +47,14 @@ function ToDoList() {
       <ol>
         {tasks.map((task, index) => (
           <li key={index}>
-            <span className="mr-2 text-black font-semibold">{task}</span>
+            <span
+              onClick={() => completeTask(index)}
+              className={`mr-2 font-semibold cusor-pointer ${
+                task.completed ? "line-through text-gray-400" : "text-black"
+              }`}
+            >
+              {task.text}
+            </span>
             <button
               className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
               onClick={() => removeTask(index)}
